@@ -1,34 +1,34 @@
 import Alamofire
 import Foundation
 
-public struct CVEchecker {
-    public init() {}
+
+struct CVE: Codable {
+    let package: String
+    let after: String
+}
+
+struct CVEModel: Codable {
+    let cveId: String
+    let package: String
+    let description: String
+}
+
+class CVEService {
+    private let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
     
-    public func getCVEs(package: String, after: String, completion: @escaping ([[String: Any]]?, Error?) -> Void) {
-        let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: Parameters = ["package": package, "after": after]
-        AF.request(baseURL, parameters: parameters).responseJSON { response in
+    func getCVEs(cve: CVE, completion: @escaping ([CVEModel]?, Error?) -> Void) {
+        guard let url = URL(string: baseURL) else {
+            completion(nil, NSError(domain: "URLError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to create URL"]))
+            return
+        }
+        
+        AF.request(url, method: .get, parameters: cve, encoder: URLEncodedFormParameterEncoder.default).responseDecodable(of: [CVEModel].self) { response in
             switch response.result {
             case .success(let value):
-                guard let jsonData = try? JSONSerialization.data(withJSONObject: value, options: []) else {
-                    completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSON object to data"]))
-                    return
-                }
-
-                do {
-                    if let cves = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]] {
-                        completion(cves, nil)
-                    } else {
-                        completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON object"]))
-                    }
-                } catch {
-                    completion(nil, error)
-                }
-
+                completion(value, nil)
             case .failure(let error):
                 completion(nil, error)
             }
         }
     }
-
 }
