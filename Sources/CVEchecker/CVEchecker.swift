@@ -4,9 +4,10 @@ import Foundation
 public struct CVEchecker {
     public init() {}
     
-    public func getCVEs(package: String, after: String, completion: @escaping ([[String: Any]]?, Error?) -> Void) {
+    func getCVEs(cve: CVE, completion: @escaping ([CVEModel]?, Error?) -> Void) {
+        let parameters: Parameters = ["package": cve.package, "after": cve.after]
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: Parameters = ["package": package, "after": after]
+        
         AF.request(baseURL, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let value):
@@ -14,21 +15,28 @@ public struct CVEchecker {
                     completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSON object to data"]))
                     return
                 }
-
+                
                 do {
-                    if let cves = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]] {
-                        completion(cves, nil)
-                    } else {
-                        completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON object"]))
-                    }
+                    let decoder = JSONDecoder()
+                    let cveModels = try decoder.decode([CVEModel].self, from: jsonData)
+                    completion(cveModels, nil)
                 } catch {
                     completion(nil, error)
                 }
-
+                
             case .failure(let error):
                 completion(nil, error)
             }
         }
     }
+}
 
+struct CVE {
+    let package: String
+    let after: String
+}
+struct CVEModel: Decodable {
+    let cveId: String
+    let package: String
+    let description: String
 }

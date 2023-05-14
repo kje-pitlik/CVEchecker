@@ -13,3 +13,6 @@ proba
                 print("CVEs: \(cves)")
             }
         }
+
+
+https://access.redhat.com/documentation/en-us/red_hat_security_data_api/1.0/html/red_hat_security_data_api/index
