@@ -7,7 +7,7 @@ class CVEcheckerTests: XCTestCase {
         CVEchecker().getCVEs(package: "ios", after: "2019-01-01") { cves, error in
             XCTAssertNotNil(cves, "Expected to receive CVE data")
             XCTAssertNil(error, "Expected no error to occur")
-            XCTAssertEqual(cves!.count, 11, "Expected to receive 6 CVEs")
+            XCTAssertEqual(cves!.count, 6, "Expected to receive 6 CVEs")
             expectation.fulfill()
         }
         

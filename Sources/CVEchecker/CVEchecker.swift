@@ -1,31 +1,21 @@
 import Alamofire
 import Foundation
 
-
-struct CVE: Codable {
-    let package: String
-    let after: String
-}
-
-struct CVEModel: Codable {
-    let cveId: String
-    let package: String
-    let description: String
-}
-
-class CVEService {
-    private let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
+public struct CVEchecker {
+    public init() {}
     
-    func getCVEs(cve: CVE, completion: @escaping ([CVEModel]?, Error?) -> Void) {
-        guard let url = URL(string: baseURL) else {
-            completion(nil, NSError(domain: "URLError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to create URL"]))
-            return
-        }
-        
-        AF.request(url, method: .get, parameters: cve, encoder: URLEncodedFormParameterEncoder.default).responseDecodable(of: [CVEModel].self) { response in
+    public func getCVEs(package: String, after: String, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
+        let parameters: Parameters = ["package": package, "after": after]
+        AF.request(baseURL, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let value):
-                completion(value, nil)
+                if let cves = value as? [String: Any] {
+                    completion(cves, nil)
+                } else {
+                    let error = NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON object: \(value)"])
+                    completion(nil, error)
+                }
             case .failure(let error):
                 completion(nil, error)
             }
