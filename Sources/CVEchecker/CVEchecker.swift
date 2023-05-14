@@ -13,7 +13,8 @@ public struct CVEchecker {
                 if let cves = value as? [String: Any] {
                     completion(cves, nil)
                 } else {
-                    completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: nil))
+                    let error = NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON object: \(value)"])
+                    completion(nil, error)
                 }
             case .failure(let error):
                 completion(nil, error)
