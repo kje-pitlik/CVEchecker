@@ -10,12 +10,21 @@ public struct CVEchecker {
         AF.request(baseURL, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let value):
-                if let cves = value as? [[String: Any]] {
-                    completion(cves, nil)
-                } else {
-                    let error = NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON object: \(value)"])
+                guard let jsonData = try? JSONSerialization.data(withJSONObject: value, options: []) else {
+                    completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSON object to data"]))
+                    return
+                }
+
+                do {
+                    if let cves = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]] {
+                        completion(cves, nil)
+                    } else {
+                        completion(nil, NSError(domain: "ParsingError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON object"]))
+                    }
+                } catch {
                     completion(nil, error)
                 }
+
             case .failure(let error):
                 completion(nil, error)
             }
