@@ -13,7 +13,6 @@ public struct CVE: Codable {
 public struct CVEchecker {
     public init() {}
 
-    public func getCVEs(package: String, after: String, completion: @escaping ([[String: Any]]?, Error?) -> Void) {
     public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
         let parameters: Parameters = ["package": package, "after": after]
