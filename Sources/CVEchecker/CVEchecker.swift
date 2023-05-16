@@ -17,20 +17,19 @@ public struct CVE: Codable {
     public let cvss3_score: String
 }
 
-
-
 public struct CVEchecker {
     public init() {}
     
     public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: Parameters = ["package": package, "after": after]
+        let parameters: [String: Any] = ["package": package, "after": after]
         AF.request(baseURL, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let value):
                 do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: value)
                     let decoder = JSONDecoder()
-                    let cves = try decoder.decode([CVE].self, from: response.data!)
+                    let cves = try decoder.decode([CVE].self, from: jsonData)
                     completion(cves, nil)
                 } catch {
                     completion(nil, error)
@@ -41,4 +40,3 @@ public struct CVEchecker {
         }
     }
 }
-
