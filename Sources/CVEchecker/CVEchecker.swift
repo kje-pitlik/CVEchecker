@@ -23,8 +23,11 @@ public struct CVEchecker {
                     let cves = try decoder.decode([CVE].self, from: response.data!)
                     completion(cves, nil)
                 } catch let error {
+                    print("Error decoding JSON: \(error.localizedDescription)")
+                    print("JSON response: \(String(data: response.data!, encoding: .utf8) ?? "nil")")
                     completion(nil, error)
                 }
+
             case .failure(let error):
                 completion(nil, error)
             }
