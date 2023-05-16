@@ -2,12 +2,16 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    public let id: String
-    public let cvssScore: Double
-    public let publishedDate: String
-    public let cwe: String
-    public let summary: String
+    public let CVE: String
+    public let cvss3_score: Double
+    public let public_date: String
+    public let CWE: String
+    public let bugzilla_description: String
     public let severity: String
+
+    private enum CodingKeys: String, CodingKey {
+        case CVE, cvss3_score, public_date = "public_date", CWE, bugzilla_description, severity
+    }
 }
 
 public struct CVEchecker {
