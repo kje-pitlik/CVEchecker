@@ -7,6 +7,7 @@ public struct CVE: Codable {
     public let publishedDate: String
     public let cwe: String
     public let summary: String
+    public let severity: String
 }
 
 public struct CVEchecker {
@@ -21,7 +22,6 @@ public struct CVEchecker {
                 do {
                     let decoder = JSONDecoder()
                     let cves = try decoder.decode([CVE].self, from: response.data!)
-                    print("response.data: \(response.data)")
                     completion(cves, nil)
                 } catch let error {
                     print("Error decoding JSON: \(error.localizedDescription)")
