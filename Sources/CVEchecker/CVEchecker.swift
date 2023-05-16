@@ -21,6 +21,7 @@ public struct CVEchecker {
                 do {
                     let decoder = JSONDecoder()
                     let cves = try decoder.decode([CVE].self, from: response.data!)
+                    print("response.data: \(response.data)")
                     completion(cves, nil)
                 } catch let error {
                     print("Error decoding JSON: \(error.localizedDescription)")
@@ -34,3 +35,9 @@ public struct CVEchecker {
         }
     }
 }
+// mi kellene meg gettelni? https://access.redhat.com/documentation/en-us/red_hat_security_data_api/1.0/html-single/red_hat_security_data_api/index#parameters_2
+// Mitigation: A way to fix or reduce the problem without updated software.
+// Details: Details about the flaw, possibly from Red Hat or Mitre.
+// Acknowledgements: People or organizations that are being recognized.
+
+
