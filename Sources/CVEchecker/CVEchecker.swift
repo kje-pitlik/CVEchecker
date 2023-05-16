@@ -2,41 +2,69 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    public let CVE: String
-    public let severity: String
-    public let public_date: String
-    public let advisories: [String]
-    public let bugzilla: String
-    public let bugzilla_description: String
-    public let cvss_score: Double?
-    public let cvss_scoring_vector: String?
-    public let CWE: String?
-    public let affected_packages: [String]
-    public let resource_url: String
-    public let cvss3_scoring_vector: String
-    public let cvss3_score: String
+    let cve: String
+    let severity: String
+    let publicDate: String
+    let advisories: [String]
+    let bugzilla: String
+    let bugzillaDescription: String
+    let cvssScore: Double?
+    let cvssScoringVector: String?
+    let CWE: String
+    let affectedPackages: [String]
+    let resourceUrl: String
+    let cvss3ScoringVector: String
+    let cvss3Score: Double
 }
 
 public struct CVEchecker {
     public init() {}
     
-    public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
-        let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: [String: Any] = ["package": package, "after": after]
-        AF.request(baseURL, parameters: parameters).responseJSON { response in
-            switch response.result {
-            case .success(let value):
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: value)
-                    let decoder = JSONDecoder()
-                    let cves = try decoder.decode([CVE].self, from: jsonData)
-                    completion(cves, nil)
-                } catch {
-                    completion(nil, error)
-                }
-            case .failure(let error):
-                completion(nil, error)
+    func getCVEs(package: String, after: String, completion: @escaping ([CVE]) -> Void) {
+        // Define the URL to retrieve the data from
+        let urlString = "https://access.redhat.com/labs/securitydataapi/cve.json?package=\(package)&after=\(after)"
+        
+        // Create a URL object from the string
+        guard let url = URL(string: urlString) else {
+            print("Error: Invalid URL")
+            return
+        }
+        
+        // Create a URLSession and a data task to retrieve the JSON data
+        let session = URLSession.shared
+        let task = session.dataTask(with: url) { data, response, error in
+            // Check for errors
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            
+            // Check for a successful HTTP response
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Error: Invalid HTTP response")
+                return
+            }
+            
+            // Parse the JSON data into an array of CVE structs
+            guard let data = data else {
+                print("Error: No data received")
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                let cveArray = try decoder.decode([CVE].self, from: data)
+                // Call the completion handler with the array of CVEs
+                completion(cveArray)
+            } catch {
+                print("Error decoding JSON: \(error)")
             }
         }
+        
+        // Start the data task
+        task.resume()
     }
 }
