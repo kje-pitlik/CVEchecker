@@ -10,12 +10,13 @@ public struct CVE: Codable {
     public let bugzilla_description: String
     public let cvss_score: Double?
     public let cvss_scoring_vector: String?
-    public let CWE: String
+    public let CWE: String?
     public let affected_packages: [String]
     public let resource_url: String
     public let cvss3_scoring_vector: String
     public let cvss3_score: String
 }
+
 
 
 public struct CVEchecker {
@@ -31,7 +32,7 @@ public struct CVEchecker {
                     let decoder = JSONDecoder()
                     let cves = try decoder.decode([CVE].self, from: response.data!)
                     completion(cves, nil)
-                } catch let error {
+                } catch {
                     completion(nil, error)
                 }
             case .failure(let error):
@@ -40,3 +41,4 @@ public struct CVEchecker {
         }
     }
 }
+
