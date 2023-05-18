@@ -48,11 +48,22 @@ public struct CVEchecker {
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let cves = try decoder.decode([CVE].self, from: response.data!)
                     completion(cves, nil)
-                } catch let error {
-                    print("Error decoding JSON: \(error.localizedDescription)")
-                    print("JSON response: \(String(data: response.data!, encoding: .utf8) ?? "nil")")
-                    completion(nil, error)
+                
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
+
 
             case .failure(let error):
                 completion(nil, error)
@@ -65,5 +76,4 @@ public struct CVEchecker {
 // Mitigation: A way to fix or reduce the problem without updated software.
 // Details: Details about the flaw, possibly from Red Hat or Mitre.
 // Acknowledgements: People or organizations that are being recognized.
-
 
