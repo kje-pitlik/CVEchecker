@@ -1,5 +1,6 @@
 import Alamofire
 import Foundation
+
 public struct CVE: Codable {
     public let cve: String
     public let severity: String
@@ -9,8 +10,8 @@ public struct CVE: Codable {
     public let bugzilla_description: String?
     public let cvss_score: Double?
     public let cvss_scoring_vector: Double?
-    public let CWE: String
-    public let affected_packages: [String]
+    public let cwe: String
+    public let affected_packages: [String]?
     public let resource_url: String
     public let cvss3_scoring_vector: String
     public let cvss3_score: String
@@ -24,7 +25,7 @@ public struct CVE: Codable {
         case bugzilla_description
         case cvss_score
         case cvss_scoring_vector
-        case CWE
+        case cwe = "CWE"
         case affected_packages
         case resource_url
         case cvss3_scoring_vector
@@ -40,8 +41,8 @@ public struct CVE: Codable {
         bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)
         cvss_score = try container.decodeIfPresent(Double.self, forKey: .cvss_score)
         cvss_scoring_vector = try container.decodeIfPresent(Double.self, forKey: .cvss_scoring_vector)
-        CWE = try container.decode(String.self, forKey: .CWE)
-        affected_packages = try container.decode([String].self, forKey: .affected_packages)
+        cwe = try container.decode(String.self, forKey: .cwe)
+        affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)
         resource_url = try container.decode(String.self, forKey: .resource_url)
         cvss3_scoring_vector = try container.decode(String.self, forKey: .cvss3_scoring_vector)
         cvss3_score = try container.decode(String.self, forKey: .cvss3_score)
@@ -57,6 +58,8 @@ public struct CVE: Codable {
         }
     }
 }
+
+
 
 
 public struct CVEchecker {
