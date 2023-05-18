@@ -8,19 +8,19 @@ public struct CVE: Codable {
     public let advisories: [String]
     public let bugzilla: String
     public let bugzilla_description: String
-    public let cvss_score: Double
-    public let cvss_scoring_vector: Double
+    public let cvss_score: Double?
+    public let cvss_scoring_vector: Double?
     public let CWE: String
     public let affected_packages: [String]
     public let resource_url: String
-    public let cvss3_scoring_vector: String
-    public let cvss3_score: String
+    public let cvss3_scoring_vector: String?
+    public let cvss3_score: String?
 
     private enum CodingKeys: String, CodingKey {
         case CVE, severity, public_date, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, resource_url, cvss3_scoring_vector, cvss3_score
     }
-
 }
+
 
 public struct CVEchecker {
     public init() {}
