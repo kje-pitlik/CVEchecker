@@ -1,13 +1,12 @@
 import Alamofire
 import Foundation
-
 public struct CVE: Codable {
     public let cve: String
     public let severity: String
     public let public_date: Date
     public let advisories: [String]
     public let bugzilla: String
-    public let bugzilla_description: String
+    public let bugzilla_description: String?
     public let cvss_score: Double?
     public let cvss_scoring_vector: Double?
     public let CWE: String
@@ -38,7 +37,7 @@ public struct CVE: Codable {
         severity = try container.decode(String.self, forKey: .severity)
         advisories = try container.decode([String].self, forKey: .advisories)
         bugzilla = try container.decode(String.self, forKey: .bugzilla)
-        bugzilla_description = try container.decode(String.self, forKey: .bugzilla_description)
+        bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)
         cvss_score = try container.decodeIfPresent(Double.self, forKey: .cvss_score)
         cvss_scoring_vector = try container.decodeIfPresent(Double.self, forKey: .cvss_scoring_vector)
         CWE = try container.decode(String.self, forKey: .CWE)
@@ -58,7 +57,6 @@ public struct CVE: Codable {
         }
     }
 }
-
 
 
 public struct CVEchecker {
