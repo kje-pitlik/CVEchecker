@@ -52,15 +52,16 @@ public struct CVEchecker {
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let cves = try decoder.decode([CVE].self, from: response.data!)
                     completion(cves, nil)
+                
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
                     if let data = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted),
                        let jsonString = String(data: data, encoding: .utf8) {
                         print("JSON response: \(jsonString)")
                     }
 
-                } catch let DecodingError.dataCorrupted(context) {
-                    print(context)
-                } catch let DecodingError.keyNotFound(key, context) {
-                    print("Key '\(key)' not found:", context.debugDescription)
                     print("codingPath:", context.codingPath)
                 } catch let DecodingError.valueNotFound(value, context) {
                     print("Value '\(value)' not found:", context.debugDescription)
