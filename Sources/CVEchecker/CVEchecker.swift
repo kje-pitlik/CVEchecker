@@ -2,22 +2,34 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    public let CVE: String
+    public let cve: String
     public let severity: String
-    public let public_date: String
+    public let publicDate: String
     public let advisories: [String]
     public let bugzilla: String
-    public let bugzilla_description: String
-    public let cvss_score: Double?
-    public let cvss_scoring_vector: Double?
-    public let CWE: String
-    public let affected_packages: [String]
-    public let resource_url: String
-    public let cvss3_scoring_vector: String?
-    public let cvss3_score: String?
+    public let bugzillaDescription: String
+    public let cvssScore: Double?
+    public let cvssScoringVector: String
+    public let cwe: String
+    public let affectedPackages: [String]
+    public let resourceUrl: String
+    public let cvss3ScoringVector: String
+    public let cvss3Score: String
 
     private enum CodingKeys: String, CodingKey {
-        case CVE, severity, public_date, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, resource_url, cvss3_scoring_vector, cvss3_score
+        case cve = "CVE"
+        case severity
+        case publicDate = "public_date"
+        case advisories
+        case bugzilla
+        case bugzillaDescription = "bugzilla_description"
+        case cvssScore = "cvss_score"
+        case cvssScoringVector = "cvss_scoring_vector"
+        case cwe = "CWE"
+        case affectedPackages = "affected_packages"
+        case resourceUrl = "resource_url"
+        case cvss3ScoringVector = "cvss3_scoring_vector"
+        case cvss3Score = "cvss3_score"
     }
 }
 
@@ -28,7 +40,7 @@ public struct CVEchecker {
     public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
         let parameters: Alamofire.Parameters = ["package": package, "after": after]
-        AF.request(baseURL, parameters: parameters).responseJSON { response in
+        AF.request(baseURL, parameters: parameters).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
                 do {
