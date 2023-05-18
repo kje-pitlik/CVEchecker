@@ -4,7 +4,7 @@ import Foundation
 public struct CVE: Codable {
     public let cve: String
     public let severity: String
-    public let public_date: String
+    public let public_date: Date
     public let advisories: [String]
     public let bugzilla: String
     public let bugzilla_description: String
@@ -31,7 +31,34 @@ public struct CVE: Codable {
         case cvss3_scoring_vector
         case cvss3_score
     }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        cve = try container.decode(String.self, forKey: .cve)
+        severity = try container.decode(String.self, forKey: .severity)
+        advisories = try container.decode([String].self, forKey: .advisories)
+        bugzilla = try container.decode(String.self, forKey: .bugzilla)
+        bugzilla_description = try container.decode(String.self, forKey: .bugzilla_description)
+        cvss_score = try container.decodeIfPresent(Double.self, forKey: .cvss_score)
+        cvss_scoring_vector = try container.decodeIfPresent(Double.self, forKey: .cvss_scoring_vector)
+        CWE = try container.decode(String.self, forKey: .CWE)
+        affected_packages = try container.decode([String].self, forKey: .affected_packages)
+        resource_url = try container.decode(String.self, forKey: .resource_url)
+        cvss3_scoring_vector = try container.decode(String.self, forKey: .cvss3_scoring_vector)
+        cvss3_score = try container.decode(String.self, forKey: .cvss3_score)
+
+        // Decode date using custom formatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        if let dateString = try container.decodeIfPresent(String.self, forKey: .public_date),
+           let date = dateFormatter.date(from: dateString) {
+            public_date = date
+        } else {
+            throw DecodingError.dataCorruptedError(forKey: .public_date, in: container, debugDescription: "Invalid date format")
+        }
+    }
 }
+
 
 
 public struct CVEchecker {
