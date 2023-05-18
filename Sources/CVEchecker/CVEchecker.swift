@@ -4,7 +4,7 @@ import Foundation
 public struct CVE: Codable {
     public let CVE: String
     public let severity: String
-    public let public_date: String
+    public let public_date: String?
     public let advisories: [String]
     public let bugzilla: String
     public let bugzilla_description: String?
