@@ -4,32 +4,32 @@ import Foundation
 public struct CVE: Codable {
     public let cve: String
     public let severity: String
-    public let publicDate: String
+    public let public_date: String
     public let advisories: [String]
     public let bugzilla: String
-    public let bugzillaDescription: String
-    public let cvssScore: Double?
-    public let cvssScoringVector: String
-    public let cwe: String
-    public let affectedPackages: [String]
-    public let resourceUrl: String
-    public let cvss3ScoringVector: String
-    public let cvss3Score: String
+    public let bugzilla_description: String
+    public let cvss_score: Double?
+    public let cvss_scoring_vector: Double?
+    public let CWE: String
+    public let affected_packages: [String]
+    public let resource_url: String
+    public let cvss3_scoring_vector: String
+    public let cvss3_score: String
 
     private enum CodingKeys: String, CodingKey {
         case cve = "CVE"
         case severity
-        case publicDate = "public_date"
+        case public_date
         case advisories
         case bugzilla
-        case bugzillaDescription = "bugzilla_description"
-        case cvssScore = "cvss_score"
-        case cvssScoringVector = "cvss_scoring_vector"
-        case cwe = "CWE"
-        case affectedPackages = "affected_packages"
-        case resourceUrl = "resource_url"
-        case cvss3ScoringVector = "cvss3_scoring_vector"
-        case cvss3Score = "cvss3_score"
+        case bugzilla_description
+        case cvss_score
+        case cvss_scoring_vector
+        case CWE
+        case affected_packages
+        case resource_url
+        case cvss3_scoring_vector
+        case cvss3_score
     }
 }
 
