@@ -27,12 +27,13 @@ public struct CVEchecker {
     
     public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: [String: Any] = ["package": package, "after": after]
+        let parameters: Alamofire.Parameters = ["package": package, "after": after]
         AF.request(baseURL, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let value):
                 do {
                     let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let cves = try decoder.decode([CVE].self, from: response.data!)
                     completion(cves, nil)
                 } catch let error {
