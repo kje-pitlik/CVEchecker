@@ -2,63 +2,42 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    public let cve: String
+    public let CVE: String
     public let severity: String
-    public let public_date: Date
+    public let public_date: String
     public let advisories: [String]
     public let bugzilla: String
     public let bugzilla_description: String?
     public let cvss_score: Double?
     public let cvss_scoring_vector: Double?
-    public let cwe: String
+    public let CWE: String
     public let affected_packages: [String]?
     public let resource_url: String?
     public let cvss3_scoring_vector: String?
     public let cvss3_score: String?
 
     private enum CodingKeys: String, CodingKey {
-        case cve = "CVE"
-        case severity
-        case public_date
-        case advisories
-        case bugzilla
-        case bugzilla_description
-        case cvss_score
-        case cvss_scoring_vector
-        case cwe = "CWE"
-        case affected_packages
-        case resource_url
-        case cvss3_scoring_vector
-        case cvss3_score
+        case CVE, severity, public_date, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, resource_url, cvss3_scoring_vector, cvss3_score
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        cve = try container.decode(String.self, forKey: .cve)
+        CVE = try container.decode(String.self, forKey: .CVE)
         severity = try container.decode(String.self, forKey: .severity)
+        public_date = try container.decode(String.self, forKey: .public_date)
         advisories = try container.decode([String].self, forKey: .advisories)
         bugzilla = try container.decode(String.self, forKey: .bugzilla)
         bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)
         cvss_score = try container.decodeIfPresent(Double.self, forKey: .cvss_score)
         cvss_scoring_vector = try container.decodeIfPresent(Double.self, forKey: .cvss_scoring_vector)
-        cwe = try container.decode(String.self, forKey: .cwe)
+        CWE = try container.decode(String.self, forKey: .CWE)
         affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)
         resource_url = try container.decodeIfPresent(String.self, forKey: .resource_url)
         cvss3_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss3_scoring_vector)
         cvss3_score = try container.decodeIfPresent(String.self, forKey: .cvss3_score)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        if let dateString = try container.decodeIfPresent(String.self, forKey: .public_date),
-           let date = dateFormatter.date(from: dateString) {
-            public_date = date
-        } else {
-            let context = DecodingError.Context(codingPath: container.codingPath + [CodingKeys.public_date],
-                                                debugDescription: "Invalid date format")
-            throw DecodingError.dataCorrupted(context)
-        }
     }
 }
+
 
 
 
