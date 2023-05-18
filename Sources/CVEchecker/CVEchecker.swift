@@ -47,17 +47,19 @@ public struct CVE: Codable {
         cvss3_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss3_scoring_vector)
         cvss3_score = try container.decodeIfPresent(String.self, forKey: .cvss3_score)
 
-        // Decode date using custom formatter
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         if let dateString = try container.decodeIfPresent(String.self, forKey: .public_date),
            let date = dateFormatter.date(from: dateString) {
             public_date = date
         } else {
-            throw DecodingError.dataCorruptedError(forKey: .public_date, in: container, debugDescription: "Invalid date format")
+            let context = DecodingError.Context(codingPath: container.codingPath + [CodingKeys.public_date],
+                                                debugDescription: "Invalid date format")
+            throw DecodingError.dataCorrupted(context)
         }
     }
 }
+
 
 
 
