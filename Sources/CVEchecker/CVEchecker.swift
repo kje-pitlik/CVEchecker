@@ -27,7 +27,7 @@ public struct CVEchecker {
     
     public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: Parameters = ["package": package, "after": after]
+        let parameters: [String: Any] = ["package": package, "after": after]
         AF.request(baseURL, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let value):
@@ -47,6 +47,7 @@ public struct CVEchecker {
         }
     }
 }
+
 // mi kellene meg gettelni? https://access.redhat.com/documentation/en-us/red_hat_security_data_api/1.0/html-single/red_hat_security_data_api/index#parameters_2
 // Mitigation: A way to fix or reduce the problem without updated software.
 // Details: Details about the flaw, possibly from Red Hat or Mitre.
