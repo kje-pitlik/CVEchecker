@@ -8,8 +8,8 @@ public struct CVE: Codable {
     public let advisories: [String]
     public let bugzilla: String
     public let bugzilla_description: String?
-    public let cvss_score: Double?
-    public let cvss_scoring_vector: Double?
+    public let cvss_score: String?
+    public let cvss_scoring_vector: String?
     public let CWE: String
     public let affected_packages: [String]?
     public let resource_url: String?
@@ -28,8 +28,8 @@ public struct CVE: Codable {
         advisories = try container.decode([String].self, forKey: .advisories)
         bugzilla = try container.decode(String.self, forKey: .bugzilla)
         bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)
-        cvss_score = try container.decodeIfPresent(Double.self, forKey: .cvss_score)
-        cvss_scoring_vector = try container.decodeIfPresent(Double.self, forKey: .cvss_scoring_vector)
+        cvss_score = try container.decodeIfPresent(String.self, forKey: .cvss_score)
+        cvss_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss_scoring_vector)
         CWE = try container.decode(String.self, forKey: .CWE)
         affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)
         resource_url = try container.decodeIfPresent(String.self, forKey: .resource_url)
