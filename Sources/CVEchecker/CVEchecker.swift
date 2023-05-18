@@ -12,7 +12,7 @@ public struct CVE: Codable {
     public let cwe: String
     public let affected_packages: [String]?
     public let resource_url: String?
-    public let cvss3_scoring_vector: String
+    public let cvss3_scoring_vector: String?
     public let cvss3_score: String
 
     private enum CodingKeys: String, CodingKey {
@@ -43,7 +43,7 @@ public struct CVE: Codable {
         cwe = try container.decode(String.self, forKey: .cwe)
         affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)
         resource_url = try container.decodeIfPresent(String.self, forKey: .resource_url)
-        cvss3_scoring_vector = try container.decode(String.self, forKey: .cvss3_scoring_vector)
+        cvss3_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss3_scoring_vector)
         cvss3_score = try container.decode(String.self, forKey: .cvss3_score)
 
         // Decode date using custom formatter
