@@ -56,7 +56,7 @@ public struct CVEchecker {
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
                 } catch let DecodingError.keyNotFound(key, context) {
-                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("Key '\(key.stringValue)' not found:", context.debugDescription)
                     if let data = try? JSONSerialization.data(withJSONObject: value, options: .prettyPrinted),
                        let jsonString = String(data: data, encoding: .utf8) {
                         print("JSON response: \(jsonString)")
