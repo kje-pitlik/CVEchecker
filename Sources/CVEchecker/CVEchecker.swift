@@ -2,7 +2,7 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    public let public_date_string: String?
+    public let public_date: String?
     public let advisories: [String]
     public let CVE: String
     public let bugzilla: String
@@ -17,14 +17,14 @@ public struct CVE: Codable {
     public let cvss3_scoring_vector: String
 
     private enum CodingKeys: String, CodingKey {
-        case CVE, severity, public_date_string, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, resource_url, cvss3_scoring_vector, cvss3_score
+        case CVE, severity, public_date, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, resource_url, cvss3_scoring_vector, cvss3_score
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         CVE = try container.decode(String.self, forKey: .CVE)
         severity = try container.decode(String.self, forKey: .severity)
-        public_date_string = try container.decode(String.self, forKey: .public_date_string)
+        public_date = try container.decode(String.self, forKey: .public_date)
         advisories = try container.decode([String].self, forKey: .advisories)
         bugzilla = try container.decode(String.self, forKey: .bugzilla)
         bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)!
