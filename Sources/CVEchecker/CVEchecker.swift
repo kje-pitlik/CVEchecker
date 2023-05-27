@@ -2,19 +2,19 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    let CVE: String?
-    let severity: String?
-    let advisories: [String]?
-    let bugzilla: String?
-    let bugzilla_description: String?
-    let cvss_score: String?
-    let cvss_scoring_vector: String?
-    let CWE: String?
-    let affected_packages: [String]?
-    let resource_url: String?
-    let cvss3_scoring_vector: String?
-    let cvss3_score: String?
-    let publicDate: String?
+    public let CVE: String?
+    public let severity: String?
+    public let advisories: [String]?
+    public let bugzilla: String?
+    public let bugzilla_description: String?
+    public let cvss_score: String?
+    public let cvss_scoring_vector: String?
+    public let CWE: String?
+    public let affected_packages: [String]?
+    public let resource_url: String?
+    public let cvss3_scoring_vector: String?
+    public let cvss3_score: String?
+    public let publicDate: String?
 
     private enum CodingKeys: String, CodingKey {
         case publicDate = "public_date"
