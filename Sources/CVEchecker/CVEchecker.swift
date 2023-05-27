@@ -50,8 +50,9 @@ public struct CVEchecker {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let cves = try decoder.decode([CVE].self, from: response.data!)
-                    completion(cves, nil)
+                    let cves = try decoder.decode([CVE?].self, from: response.data!)
+                    let validCVEs = cves.compactMap { $0 }
+                    completion(validCVEs, nil)
                 
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -79,6 +80,7 @@ public struct CVEchecker {
             }
         }
     }
+
 }
 
 // mi kellene meg gettelni? https://access.redhat.com/documentation/en-us/red_hat_security_data_api/1.0/html-single/red_hat_security_data_api/index#parameters_2
