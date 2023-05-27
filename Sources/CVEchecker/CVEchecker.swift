@@ -2,39 +2,52 @@ import Alamofire
 import Foundation
 
 public struct CVE: Codable {
-    public let CVE: String
-    public let severity: String
-    public let public_date: String
-    public let advisories: [String]
-    public let bugzilla: String
-    public let bugzilla_description: String
-    public let cvss_score: String?
-    public let cvss_scoring_vector: String
-    public let CWE: String
-    public let affected_packages: [String]
-    public let resource_url: String
-    public let cvss3_scoring_vector: String
-    public let cvss3_score: String
+    let CVE: String?
+    let severity: String?
+    let advisories: [String]?
+    let bugzilla: String?
+    let bugzilla_description: String?
+    let cvss_score: String?
+    let cvss_scoring_vector: String?
+    let CWE: String?
+    let affected_packages: [String]?
+    let resource_url: String?
+    let cvss3_scoring_vector: String?
+    let cvss3_score: String?
+    let publicDate: String?
 
     private enum CodingKeys: String, CodingKey {
-        case CVE, severity, public_date, advisories, bugzilla, bugzilla_description, cvss_score, cvss_scoring_vector, CWE, affected_packages, resource_url, cvss3_scoring_vector, cvss3_score
-    }
-
+        case publicDate = "public_date"
+        case CVE = "CVE"
+        case severity = "severity"
+        case advisories = "advisories"
+        case bugzilla = "bugzilla"
+        case bugzilla_description = "bugzilla_description"
+        case cvss_score = "cvss_score"
+        case cvss_scoring_vector = "cvss_scoring_vector"
+        case CWE = "CWE"
+        case affected_packages = "affected_packages"
+        case resource_url = "resource_url"
+        case cvss3_scoring_vector = "cvss3_scoring_vector"
+        case cvss3_score = "cvss3_score"
+            // Define other coding keys for the remaining properties
+        }
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        CVE = try container.decodeIfPresent(String.self, forKey: .CVE)!
-        severity = try container.decodeIfPresent(String.self, forKey: .severity)!
-        public_date = try container.decodeIfPresent(String.self, forKey: .public_date)!
-        advisories = try container.decodeIfPresent([String].self, forKey: .advisories)!
-        bugzilla = try container.decodeIfPresent(String.self, forKey: .bugzilla)!
-        bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)!
+        CVE = try container.decodeIfPresent(String.self, forKey: .CVE)
+        severity = try container.decodeIfPresent(String.self, forKey: .severity)
+        publicDate = try container.decodeIfPresent(String.self, forKey: .publicDate)
+
+        advisories = try container.decodeIfPresent([String].self, forKey: .advisories)
+        bugzilla = try container.decodeIfPresent(String.self, forKey: .bugzilla)
+        bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)
         cvss_score = try container.decodeIfPresent(String.self, forKey: .cvss_score)
-        cvss_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss_scoring_vector)!
-        CWE = try container.decodeIfPresent(String.self, forKey: .CWE)!
-        affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)!
-        resource_url = try container.decodeIfPresent(String.self, forKey: .resource_url)!
-        cvss3_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss3_scoring_vector)!
-        cvss3_score = try container.decodeIfPresent(String.self, forKey: .cvss3_score)!
+        cvss_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss_scoring_vector)
+        CWE = try container.decodeIfPresent(String.self, forKey: .CWE)
+        affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)
+        resource_url = try container.decodeIfPresent(String.self, forKey: .resource_url)
+        cvss3_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss3_scoring_vector)
+        cvss3_score = try container.decodeIfPresent(String.self, forKey: .cvss3_score)
     }
 }
 
@@ -50,10 +63,9 @@ public struct CVEchecker {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let cves = try decoder.decode([CVE?].self, from: response.data!)
-                    let validCVEs = cves.compactMap { $0 }
-                    completion(validCVEs, nil)
-                
+                    let cves = try decoder.decode([CVE].self, from: response.data!)
+                    completion(cves, nil)
+                    
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
                 } catch let DecodingError.keyNotFound(key, context) {
@@ -62,7 +74,6 @@ public struct CVEchecker {
                        let jsonString = String(data: data, encoding: .utf8) {
                         print("JSON response: \(jsonString)")
                     }
-
                     print("codingPath:", context.codingPath)
                 } catch let DecodingError.valueNotFound(value, context) {
                     print("Value '\(value)' not found:", context.debugDescription)
@@ -73,7 +84,6 @@ public struct CVEchecker {
                 } catch {
                     print("error: ", error)
                 }
-
 
             case .failure(let error):
                 completion(nil, error)
