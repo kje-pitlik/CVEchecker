@@ -22,15 +22,15 @@ public struct CVE: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        CVE = try container.decode(String.self, forKey: .CVE)
-        severity = try container.decode(String.self, forKey: .severity)
-        public_date = try container.decode(String.self, forKey: .public_date)
-        advisories = try container.decode([String].self, forKey: .advisories)
-        bugzilla = try container.decode(String.self, forKey: .bugzilla)
+        CVE = try container.decodeIfPresent(String.self, forKey: .CVE)!
+        severity = try container.decodeIfPresent(String.self, forKey: .severity)!
+        public_date = try container.decodeIfPresent(String.self, forKey: .public_date)!
+        advisories = try container.decodeIfPresent([String].self, forKey: .advisories)!
+        bugzilla = try container.decodeIfPresent(String.self, forKey: .bugzilla)!
         bugzilla_description = try container.decodeIfPresent(String.self, forKey: .bugzilla_description)!
         cvss_score = try container.decodeIfPresent(String.self, forKey: .cvss_score)
         cvss_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss_scoring_vector)!
-        CWE = try container.decode(String.self, forKey: .CWE)
+        CWE = try container.decodeIfPresent(String.self, forKey: .CWE)!
         affected_packages = try container.decodeIfPresent([String].self, forKey: .affected_packages)!
         resource_url = try container.decodeIfPresent(String.self, forKey: .resource_url)!
         cvss3_scoring_vector = try container.decodeIfPresent(String.self, forKey: .cvss3_scoring_vector)!
