@@ -55,6 +55,7 @@ checker.getCVEs(package: "example-package", after: "2023-01-01") { cves, error i
             // Access other properties of the CVE object
         }
     }
-}```
+}
+```
 
 Product list: https://www.cvedetails.com/product-list.php
