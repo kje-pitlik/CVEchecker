@@ -1,6 +1,6 @@
 import Alamofire
 import Foundation
-
+// IT WORKS
 public struct CVE: Codable {
     public let CVE: String?
     public let severity: String?
@@ -56,7 +56,7 @@ public struct CVEchecker {
     
     public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: Alamofire.Parameters = ["package": package, "after": after]
+        let parameters: Alamofire.Parameters = ["product": package, "after": after]
         AF.request(baseURL, parameters: parameters).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
