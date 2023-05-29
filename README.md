@@ -56,6 +56,3 @@ checker.getCVEs(package: "example-package", after: "2023-01-01") { cves, error i
         }
     }
 }
-
-
-https://access.redhat.com/documentation/en-us/red_hat_security_data_api/1.0/html/red_hat_security_data_api/index
