@@ -54,9 +54,9 @@ public struct CVE: Codable {
 public struct CVEchecker {
     public init() {}
     
-    public func getCVEs(package: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
+    public func getCVEs(product: String, after: String, completion: @escaping ([CVE]?, Error?) -> Void) {
         let baseURL = "https://access.redhat.com/labs/securitydataapi/cve.json"
-        let parameters: Alamofire.Parameters = ["product": package, "after": after]
+        let parameters: Alamofire.Parameters = ["product": product, "after": after]
         AF.request(baseURL, parameters: parameters).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
