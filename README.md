@@ -44,7 +44,7 @@ To use the `CVEchecker` struct, create an instance and call the `getCVEs` method
 
 ```swift
 let checker = CVEchecker()
-checker.getCVEs(package: "example-package", after: "2023-01-01") { cves, error in
+checker.getCVEs(product: "example-package", after: "2023-01-01") { cves, error in
     if let error = error {
         // Handle the error
         print("Error: \(error)")
